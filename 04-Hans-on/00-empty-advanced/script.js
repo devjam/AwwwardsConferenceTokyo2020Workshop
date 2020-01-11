@@ -19,13 +19,11 @@ function init() {
   // make main camera
   _mainCamera = new THREE.PerspectiveCamera(40, 1, 0.1, 50000)
 
-  // set resize event
-  window.addEventListener('resize', resize)
-  resize()
-
   // prepare some 3D objects
   
-  
+
+  window.addEventListener('resize', resize)
+  resize()
   update()
 }
 

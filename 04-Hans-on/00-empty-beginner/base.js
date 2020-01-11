@@ -13,6 +13,9 @@ function _init() {
   // make main camera
   _mainCamera = new THREE.PerspectiveCamera(40, 1, 0.1, 50000)
 
+  _screenWidth = window.innerWidth
+  _screenHeight = window.innerHeight
+
   init()
 
   window.addEventListener('resize', _resize)
