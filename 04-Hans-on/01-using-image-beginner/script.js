@@ -20,6 +20,7 @@ function init() {
   _mainScene.add(_img)
 
   // colorful objects
+  // noise is used to create variation
   for (let i = 0; i < 3; i++) {
     _items.push({
       mesh: makeMesh(new THREE.BoxBufferGeometry(1, 1, 1), THREE.AdditiveBlending),
