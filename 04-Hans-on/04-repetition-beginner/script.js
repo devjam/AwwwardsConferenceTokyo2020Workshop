@@ -42,6 +42,7 @@ function update() {
     mesh.position.z = Math.cos(rad) * radius
 
     if (_noiseCnt > 0) {
+      // random position & size & opacity
       mesh.scale.set(
         random(blockSize * 0.01, blockSize),
         random(blockSize * 0.01, radius),

@@ -12,8 +12,7 @@ let _noiseCnt = 0
 function init() {
   // make renderer
   _renderer = new THREE.WebGLRenderer({
-    canvas: document.getElementsByClassName('main')[0],
-    preserveDrawingBuffer: true,
+    canvas: document.getElementsByClassName('main')[0]
   })
   _renderer.setClearColor(0x000000, 1) // background color
   _renderer.setPixelRatio(window.devicePixelRatio || 1)
@@ -58,6 +57,7 @@ function update() {
     mesh.position.z = Math.cos(rad) * radius
 
     if (_noiseCnt > 0) {
+      // random position & size & opacity
       mesh.scale.set(
         random(blockSize * 0.01, blockSize),
         random(blockSize * 0.01, radius),
