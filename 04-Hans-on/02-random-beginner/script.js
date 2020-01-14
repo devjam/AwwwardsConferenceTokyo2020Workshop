@@ -13,7 +13,7 @@ function init() {
     const mesh = makeMesh()
     _items.push({
       mesh: mesh,
-      noise: random(1, 3),
+      noise: random(1, 3), // use for speed & position y
     })
     mesh.position.x = random(-_screenWidth * 0.4, _screenWidth * 1.5)
   }
@@ -36,6 +36,7 @@ function update() {
       mesh.position.y = -_screenHeight * 0.5 + mesh.scale.y * 0.5
     }
 
+    // reset when disappearing from screen
     if (mesh.position.x < -_screenWidth) {
       resetMesh(mesh)
     }
@@ -58,11 +59,14 @@ function makeMesh() {
 }
 
 function resetMesh(mesh) {
+
+  // randomly choose from three color
   mesh.material.color = new THREE.Color(randomArr([0xffffff, 0xdd3c03, 0x6b6a66]))
 
   if (Math.random() > 0.3) {
     mesh.scale.x = random(1, 3)
   } else {
+    // very small
     mesh.scale.x = random(1, _screenWidth * 0.1)
   }
   mesh.scale.y = random(_screenHeight * 0.6, _screenHeight)
