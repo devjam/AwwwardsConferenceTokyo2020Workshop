@@ -57,7 +57,7 @@ function update() {
   }
   _noiseCnt--
 
-  if (_cnt % 180 == 0) {
+  if (_cnt % 90 == 0) {
     reset()
   }
   _cnt++
@@ -110,7 +110,7 @@ function reset() {
 
   _interval = random(8, 20)
 
-  _noiseCnt = 30
+  _noiseCnt = 15
 }
 
 function mix(x, y, a) {
