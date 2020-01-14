@@ -141,6 +141,10 @@ function change() {
   for (let i = 0, len = _mesh.length; i < len; i++) {
     _mesh[i].visible = (i == _now)
   }
+  _now++
+  if (_now >= _mesh.length) {
+    _now = 0
+  }
 
   // angle randomly
   _container.rotation.x = Math.random() * 360 * (Math.PI / 180)
@@ -149,11 +153,6 @@ function change() {
 
   // parameter for replacing effect
   _noise = 1
-
-  _now++
-  if (_now >= _mesh.length) {
-    _now = 0
-  }
 }
 
 function mix(x, y, a) {
