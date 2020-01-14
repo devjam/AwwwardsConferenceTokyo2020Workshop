@@ -3,7 +3,7 @@ function _init() {
   // make renderer
   _renderer = new THREE.WebGLRenderer({
     canvas: document.getElementsByClassName('main')[0],
-    preserveDrawingBuffer: true,
+    preserveDrawingBuffer: true, // keep the drawing
   })
   _renderer.setClearColor(0xe1e1e3, 1) // background color
   _renderer.setPixelRatio(window.devicePixelRatio || 1)

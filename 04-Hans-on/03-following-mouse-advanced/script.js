@@ -12,11 +12,11 @@ function init() {
   // make renderer
   _renderer = new THREE.WebGLRenderer({
     canvas: document.getElementsByClassName('main')[0],
-    preserveDrawingBuffer: true,
+    preserveDrawingBuffer: true, // keep the drawing
   })
   _renderer.setClearColor(0xffffff, 1) // background color
   _renderer.setPixelRatio(window.devicePixelRatio || 1)
-  _renderer.autoClear = false
+  _renderer.autoClear = false // do not erase
 
   // make main scene
   _mainScene = new THREE.Scene()
@@ -47,11 +47,12 @@ function update() {
   for (let i = 0, len = _items.length; i < len; i++) {
     const mesh = _items[i]
     showMesh(mesh)
-    mesh.visible = moveDist > 1
+    mesh.visible = moveDist > 1 // Do not display when mouse is not moving
   }
 
   _mouseBuf.copy(_mouse)
 
+  // Fill background only at first
   if (_isFirstTime) {
     _isFirstTime = false
     _renderer.clear()
