@@ -42,7 +42,7 @@ function _resize() {
   // camera settings for to be actual size
   _mainCamera.aspect = _screenWidth / _screenHeight
   _mainCamera.updateProjectionMatrix()
-  _mainCamera.position.z = _screenHeight / Math.tan((_mainCamera.fov * Math.PI) / 360) / 2
+  _mainCamera.position.z = (_screenHeight * 0.5) / Math.tan((_mainCamera.fov * 0.5) * Math.PI / 180)
 
   _renderer.setSize(_screenWidth, _screenHeight)
 

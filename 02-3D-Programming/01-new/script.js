@@ -36,9 +36,7 @@ function init() {
 
   // reusable material
   _material = new THREE.MeshPhongMaterial({
-    color: 0xffffff, // ライトあたるところ
-    // emissive:0x00ff00, // 暗いとこと
-    // specular:0xffff00, // 特にライトあたるところ
+    color: 0xffffff,
     side: THREE.DoubleSide,
   })
 
@@ -102,7 +100,7 @@ function update() {
   if (_cnt % 120 == 0) {
     change()
   }
-  
+
   _cnt++
 
   // rendering
@@ -119,7 +117,7 @@ function resize() {
   // camera settings for to be actual size
   _mainCamera.aspect = _screenWidth / _screenHeight
   _mainCamera.updateProjectionMatrix()
-  _mainCamera.position.z = _screenHeight / Math.tan((_mainCamera.fov * Math.PI) / 360) / 2
+  _mainCamera.position.z = (_screenHeight * 0.5) / Math.tan((_mainCamera.fov * 0.5) * Math.PI / 180)
 
   _renderer.setSize(_screenWidth, _screenHeight)
 
@@ -140,8 +138,6 @@ function change() {
 
   // parameter for replacing effect
   _noise = 1
-
-  // _material.wireframe = (_changeCnt % 2 == 0);
 
   _now++
   if (_now >= _mesh.length) {
