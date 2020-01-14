@@ -5,10 +5,57 @@ let _mesh = []
 let _now = 0
 let _cnt = 0
 let _noise = 0
-let _changeCnt = 0
 
 // initialization
 function init() {
+
+  // make material
+  // can be reused
+  _material = new THREE.MeshPhongMaterial({
+    color: 0xffffff, // color when light hits
+    side: THREE.DoubleSide,
+  })
+
+  // box geometry and mesh
+  const geoA = new THREE.BoxBufferGeometry(1, 1, 1, 8, 8, 8)
+  const meshA = new THREE.Mesh(geoA, _material)
+  _mesh.push(meshA)
+
+  // sphere gerometry and mesh
+  const geoB = new THREE.TorusBufferGeometry(0.75, 0.2, 8, 20)
+  const meshB = new THREE.Mesh(geoB, _material)
+  _mesh.push(meshB)
+
+  // octahedron geometry and mesh
+  const geoC = new THREE.OctahedronBufferGeometry(0.75, 0)
+  const meshC = new THREE.Mesh(geoC, _material)
+  _mesh.push(meshC)
+
+  // make parent container
+  _container = new THREE.Object3D()
+
+  // add mesh to the container
+  _container.add(meshA)
+  _container.add(meshB)
+  _container.add(meshC)
+
+  // make main scene
+  _mainScene = new THREE.Scene()
+
+  // add container to the scene
+  _mainScene.add(_container)
+
+  // make light
+  _light = new THREE.PointLight(
+    0xffffff, // light color
+    0.5, // light strength
+  )
+  _mainScene.add(_light)
+
+  // make main camera
+  _mainCamera = new THREE.PerspectiveCamera(80, 1, 0.1, 50000)
+
+
   // make renderer
   _renderer = new THREE.WebGLRenderer({
     canvas: document.getElementsByClassName('main')[0],
@@ -17,47 +64,6 @@ function init() {
   _renderer.setClearColor(0xe1e1e3, 1) // background color
   _renderer.setPixelRatio(window.devicePixelRatio || 1)
 
-  // make main scene
-  _mainScene = new THREE.Scene()
-
-  // make main camera
-  _mainCamera = new THREE.PerspectiveCamera(80, 1, 0.1, 50000)
-
-  // make light
-  _light = new THREE.PointLight(
-    0xffffff, // light color
-    0.5, //strength
-  )
-  _mainScene.add(_light)
-
-  // make container
-  _container = new THREE.Object3D()
-  _mainScene.add(_container)
-
-  // reusable material
-  _material = new THREE.MeshPhongMaterial({
-    color: 0xffffff,
-    side: THREE.DoubleSide,
-  })
-
-  // box geometry and mesh
-  const geoA = new THREE.BoxBufferGeometry(1, 1, 1, 8, 8, 8)
-  const meshA = new THREE.Mesh(geoA, _material)
-  _container.add(meshA)
-  _mesh.push(meshA)
-
-  // sphere gerometry and mesh
-  const geoB = new THREE.TorusBufferGeometry(0.75, 0.2, 8, 20)
-  const meshB = new THREE.Mesh(geoB, _material)
-  _container.add(meshB)
-  _mesh.push(meshB)
-
-  // octahedron geometry and mesh
-  const geoC = new THREE.OctahedronBufferGeometry(0.75, 0)
-  const meshC = new THREE.Mesh(geoC, _material)
-  _container.add(meshC)
-  _mesh.push(meshC)
-
   change()
 
   window.addEventListener('resize', resize)
@@ -65,20 +71,38 @@ function init() {
   update()
 }
 
+
+// update something when window resized
+function resize() {
+  _screenWidth = window.innerWidth
+  _screenHeight = window.innerHeight
+
+  // camera settings for to be actual size
+  _mainCamera.aspect = _screenWidth / _screenHeight
+  _mainCamera.updateProjectionMatrix()
+  _mainCamera.position.z = (_screenHeight * 0.5) / Math.tan((_mainCamera.fov * 0.5) * Math.PI / 180)
+
+  _renderer.setSize(_screenWidth, _screenHeight)
+
+  // update something
+  const size = Math.min(_screenWidth, _screenHeight) * 0.25
+  _container.scale.set(size, size, size)
+}
+
+
 // update every frame
 function update() {
   // update some thing for animations
   _noise += (0 - _noise) * 0.6
 
+  // when _noise > 0
+  // randomize color
   const color = new THREE.Color(0xffffff)
-  _material.color = color.lerp(new THREE.Color(0x000000), _noise * 30)
-
-  for (let i = 0, len = _mesh.length; i < len; i++) {
-    _mesh[i].material.wireframe = _cnt % 2 == 0
-  }
+  _material.color = color.lerp(new THREE.Color(Math.random(), Math.random(), Math.random()), _noise * 30)
 
   if (_noise >= 0.0001) {
-    if (_cnt % 2 == 0) {
+    // alternate between true and false
+    if (_cnt % 4 == 0) {
       _material.wireframe = !_material.wireframe
     }
   } else {
@@ -109,29 +133,16 @@ function update() {
   window.requestAnimationFrame(update)
 }
 
-// update something when window resized
-function resize() {
-  _screenWidth = window.innerWidth
-  _screenHeight = window.innerHeight
 
-  // camera settings for to be actual size
-  _mainCamera.aspect = _screenWidth / _screenHeight
-  _mainCamera.updateProjectionMatrix()
-  _mainCamera.position.z = (_screenHeight * 0.5) / Math.tan((_mainCamera.fov * 0.5) * Math.PI / 180)
-
-  _renderer.setSize(_screenWidth, _screenHeight)
-
-  // update something
-  const size = Math.min(_screenWidth, _screenHeight) * 0.25
-  _container.scale.set(size, size, size)
-}
-
-// some util functions
+// change mesh
 function change() {
+
+  // show only one
   for (let i = 0, len = _mesh.length; i < len; i++) {
-    _mesh[i].visible = i == _now
+    _mesh[i].visible = (i == _now)
   }
 
+  // angle randomly
   _container.rotation.x = Math.random() * 360 * (Math.PI / 180)
   _container.rotation.y = Math.random() * 360 * (Math.PI / 180)
   _container.rotation.z = Math.random() * 360 * (Math.PI / 180)
@@ -143,8 +154,6 @@ function change() {
   if (_now >= _mesh.length) {
     _now = 0
   }
-
-  _changeCnt++
 }
 
 function mix(x, y, a) {
