@@ -21,7 +21,7 @@ function init() {
   const meshA = new THREE.Mesh(geoA, _material)
   _mesh.push(meshA)
 
-  // sphere gerometry and mesh
+  // Torus gerometry and mesh
   const geoB = new THREE.TorusBufferGeometry(0.75, 0.2, 8, 20)
   const meshB = new THREE.Mesh(geoB, _material)
   _mesh.push(meshB)
