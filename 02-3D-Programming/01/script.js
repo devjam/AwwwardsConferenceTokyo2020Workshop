@@ -1,6 +1,6 @@
 let _renderer, _mainScene, _mainCamera, _screenWidth, _screenHeight
 
-let _light, _container, _material
+let _light, _material
 let _mesh = []
 let _now = 0
 let _cnt = 0
@@ -31,19 +31,13 @@ function init() {
   const meshC = new THREE.Mesh(geoC, _material)
   _mesh.push(meshC)
 
-  // make parent container
-  _container = new THREE.Object3D()
-
-  // add mesh to the container
-  _container.add(meshA)
-  _container.add(meshB)
-  _container.add(meshC)
-
   // make main scene
   _mainScene = new THREE.Scene()
 
-  // add container to the scene
-  _mainScene.add(_container)
+  // add mesh to the scene
+  _mainScene.add(meshA)
+  _mainScene.add(meshB)
+  _mainScene.add(meshC)
 
   // make light
   _light = new THREE.PointLight(
@@ -54,7 +48,6 @@ function init() {
 
   // make main camera
   _mainCamera = new THREE.PerspectiveCamera(80, 1, 0.1, 50000)
-
 
   // make renderer
   _renderer = new THREE.WebGLRenderer({
@@ -86,7 +79,9 @@ function resize() {
 
   // update something
   const size = Math.min(_screenWidth, _screenHeight) * 0.25
-  _container.scale.set(size, size, size)
+  _mesh[0].scale.set(size, size, size)
+  _mesh[1].scale.set(size, size, size)
+  _mesh[2].scale.set(size, size, size)
 }
 
 
@@ -114,7 +109,7 @@ function update() {
   const radius = Math.min(_screenWidth, _screenHeight) * 0.5
   _mainCamera.position.x = Math.sin(radian) * radius
   _mainCamera.position.z = Math.cos(radian) * radius
-  _mainCamera.lookAt(_container.position)
+  _mainCamera.lookAt(new THREE.Vector3(0, 0, 0))
 
   // update light position
   _light.position.copy(_mainCamera.position)
@@ -147,9 +142,21 @@ function change() {
   }
 
   // angle randomly
-  _container.rotation.x = Math.random() * 360 * (Math.PI / 180)
-  _container.rotation.y = Math.random() * 360 * (Math.PI / 180)
-  _container.rotation.z = Math.random() * 360 * (Math.PI / 180)
+  _mesh[0].rotation.set(
+    Math.random() * 360 * (Math.PI / 180),
+    Math.random() * 360 * (Math.PI / 180),
+    Math.random() * 360 * (Math.PI / 180)
+  )
+  _mesh[1].rotation.set(
+    Math.random() * 360 * (Math.PI / 180),
+    Math.random() * 360 * (Math.PI / 180),
+    Math.random() * 360 * (Math.PI / 180)
+  )
+  _mesh[2].rotation.set(
+    Math.random() * 360 * (Math.PI / 180),
+    Math.random() * 360 * (Math.PI / 180),
+    Math.random() * 360 * (Math.PI / 180)
+  )
 
   // parameter for replacing effect
   _noise = 1
