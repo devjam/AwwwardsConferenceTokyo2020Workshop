@@ -1,185 +1,162 @@
+let _renderer, _mainScene, _mainCamera, _screenWidth, _screenHeight
 
+let _light, _container, _material
+let _mesh = []
+let _now = 0
+let _cnt = 0
+let _noise = 0
 
-var _renderer, _mainScene, _mainCamera, _light, _container, _material;
-var _mesh = [];
-var _now = 0;
-var _cnt = 0;
-var _noise = 0;
-var _changeCnt = 0;
-
-
-// 初期設定
-init();
+// initialization
 function init() {
 
-  // レンダラー
-  _renderer = new THREE.WebGLRenderer({
-    canvas : document.getElementsByClassName('main')[0]
-  });
-  _renderer.setClearColor(0xe1e1e3, 1); // 背景色
-  _renderer.setPixelRatio(window.devicePixelRatio || 1);
+  // make material
+  // can be reused
+  _material = new THREE.MeshPhongMaterial({
+    color: 0xffffff, // color when light hits
+    side: THREE.DoubleSide,
+  })
 
-  // メインシーン
-  _mainScene = new THREE.Scene();
+  // box geometry and mesh
+  const geoA = new THREE.BoxBufferGeometry(1, 1, 1, 8, 8, 8)
+  const meshA = new THREE.Mesh(geoA, _material)
+  _mesh.push(meshA)
 
-  // メインカメラ
-  _mainCamera = new THREE.PerspectiveCamera(80, 1, 0.1, 50000);
+  // Torus gerometry and mesh
+  const geoB = new THREE.TorusBufferGeometry(0.75, 0.2, 8, 20)
+  const meshB = new THREE.Mesh(geoB, _material)
+  _mesh.push(meshB)
 
-  // ライト
-  _light = new THREE.PointLight(
-    0xffffff, // ライトの色 明るい色
-    0.5 // 強さ
-  );
-  _mainScene.add(_light);
+  // octahedron geometry and mesh
+  const geoC = new THREE.OctahedronBufferGeometry(0.75, 0)
+  const meshC = new THREE.Mesh(geoC, _material)
+  _mesh.push(meshC)
 
-
-  // 3Dオブジェクト入れるコンテナ
+  // make parent container
   _container = new THREE.Object3D()
-  _mainScene.add(_container);
 
-  // 材質 使い回す
-  var mat = new THREE.MeshPhongMaterial({
-    color: 0xffffff, // ライトあたるところ
-    // emissive:0x00ff00, // 暗いとこと
-    // specular:0xffff00, // 特にライトあたるところ
-    side:THREE.DoubleSide
-  });
-  _material = mat;
+  // add mesh to the container
+  _container.add(meshA)
+  _container.add(meshB)
+  _container.add(meshC)
 
+  // make main scene
+  _mainScene = new THREE.Scene()
 
-  // 3Dオブジェクト Box作成
-  // 形状
-  var geoA = new THREE.BoxBufferGeometry(1, 1, 1, 8, 8, 8);
+  // add container to the scene
+  _mainScene.add(_container)
 
-  // 3Dオブジェクト
-  var meshA = new THREE.Mesh(geoA, mat);
-  _container.add(meshA);
-  _mesh.push(meshA);
+  // make light
+  _light = new THREE.PointLight(
+    0xffffff, // light color
+    0.5, // light strength
+  )
+  _mainScene.add(_light)
 
-
-  // 3Dオブジェクト Sphere作成
-  // 形状
-  var geoB = new THREE.TorusBufferGeometry(0.75, 0.2, 8, 20);
-
-  // 3Dオブジェクト
-  var meshB = new THREE.Mesh(geoB, mat);
-  _container.add(meshB);
-  _mesh.push(meshB);
+  // make main camera
+  _mainCamera = new THREE.PerspectiveCamera(80, 1, 0.1, 50000)
 
 
-  // 3Dオブジェクト 八面体作成
-  // 形状
-  var geoC = new THREE.OctahedronBufferGeometry(0.75, 0);
+  // make renderer
+  _renderer = new THREE.WebGLRenderer({
+    canvas: document.getElementsByClassName('main')[0],
+    preserveDrawingBuffer: true,
+  })
+  _renderer.setClearColor(0xe1e1e3, 1) // background color
+  _renderer.setPixelRatio(window.devicePixelRatio || 1)
 
-  // 3Dオブジェクト
-  var meshC = new THREE.Mesh(geoC, mat);
-  _container.add(meshC);
-  _mesh.push(meshC);
+  change()
 
-
-  _change();
-
-
-
-  window.addEventListener('resize', resize);
-  resize();
-
-
-  update();
+  window.addEventListener('resize', resize)
+  resize()
+  update()
 }
 
-// 毎フレーム実行
-window.requestAnimationFrame(update);
+
+// update something when window resized
+function resize() {
+  _screenWidth = window.innerWidth
+  _screenHeight = window.innerHeight
+
+  // camera settings for to be actual size
+  _mainCamera.aspect = _screenWidth / _screenHeight
+  _mainCamera.updateProjectionMatrix()
+  _mainCamera.position.z = (_screenHeight * 0.5) / Math.tan((_mainCamera.fov * 0.5) * Math.PI / 180)
+
+  _renderer.setSize(_screenWidth, _screenHeight)
+
+  // update something
+  const size = Math.min(_screenWidth, _screenHeight) * 0.25
+  _container.scale.set(size, size, size)
+}
+
+
+// update every frame
 function update() {
+  // update some thing for animations
+  _noise += (0 - _noise) * 0.6
 
-  _noise += (0 - _noise) * 0.6;
+  // when _noise > 0
+  // randomize color
+  const color = new THREE.Color(0xffffff)
+  _material.color = color.lerp(new THREE.Color(Math.random(), Math.random(), Math.random()), _noise * 30)
 
-  s = Math.min(window.innerWidth, window.innerHeight) * 0.25;
-  _container.scale.set(s, s, s);
-
-  var colorA = new THREE.Color(0xffffff)
-  _material.color = colorA.lerp(new THREE.Color(0x000000), _noise * 30);
-
-  for(var i = 0; i < _mesh.length; i++) {
-    _mesh[i].material.wireframe = (_cnt % 2 == 0)
-  }
-
-  if(_noise >= 0.0001) {
-    if(_cnt % 2 == 0) {
-      _material.wireframe = !_material.wireframe;
+  if (_noise >= 0.0001) {
+    // alternate between true and false
+    if (_cnt % 4 == 0) {
+      _material.wireframe = !_material.wireframe
     }
   } else {
-    _material.wireframe = false;
+    _material.wireframe = false
   }
 
+  // udpate camera position and look at container
+  const radian = new Date().getTime() * 0.002 * mix(1, 1.001, _noise)
+  const radius = Math.min(_screenWidth, _screenHeight) * 0.5
+  _mainCamera.position.x = Math.sin(radian) * radius
+  _mainCamera.position.z = Math.cos(radian) * radius
+  _mainCamera.lookAt(_container.position)
 
-  // // カメラはコンテナのまわりを回る
-  var radian = new Date().getTime() * 0.002 * mix(1, 1.001, _noise);
-  var radius = Math.min(window.innerWidth, window.innerHeight) * 0.5;
-  _mainCamera.position.x = Math.sin(radian) * radius;
-  _mainCamera.position.z = Math.cos(radian) * radius;
-  _mainCamera.lookAt(_container.position);
+  // update light position
+  _light.position.copy(_mainCamera.position)
+  _light.position.y += _screenHeight * 0.25
 
-  // ライトの位置
-  _light.position.copy(_mainCamera.position);
-  _light.position.y += window.innerHeight * 0.25;
-
-
-  // 一定間隔でオブジェクト切り替え
-  if(_cnt % 120 == 0) {
-    _change();
+  // change 3D object
+  if (_cnt % 120 == 0) {
+    change()
   }
 
+  _cnt++
 
-  // レンダリング
-  _renderer.render(_mainScene, _mainCamera);
+  // rendering
+  _renderer.render(_mainScene, _mainCamera)
 
-  _cnt++;
-  window.requestAnimationFrame(update);
+  window.requestAnimationFrame(update)
 }
 
 
-function _change() {
+// change mesh
+function change() {
 
-  for(var i = 0; i < _mesh.length; i++) {
-    _mesh[i].visible = (i == _now);
+  // show only one
+  for (let i = 0, len = _mesh.length; i < len; i++) {
+    _mesh[i].visible = (i == _now)
+  }
+  _now++
+  if (_now >= _mesh.length) {
+    _now = 0
   }
 
-  _container.rotation.x = Math.random() * 360 * (Math.PI / 180);
-  _container.rotation.y = Math.random() * 360 * (Math.PI / 180);
-  _container.rotation.z = Math.random() * 360 * (Math.PI / 180);
+  // angle randomly
+  _container.rotation.x = Math.random() * 360 * (Math.PI / 180)
+  _container.rotation.y = Math.random() * 360 * (Math.PI / 180)
+  _container.rotation.z = Math.random() * 360 * (Math.PI / 180)
 
-  // 切り替え時のノイズ的なパラメータ
-  _noise = 1;
-
-  // _material.wireframe = (_changeCnt % 2 == 0);
-
-  _now++;
-  if(_now >= _mesh.length) {
-    _now = 0;
-  }
-
-  _changeCnt++;
-
+  // parameter for replacing effect
+  _noise = 1
 }
-
-
-function resize() {
-
-  var sw = window.innerWidth;
-  var sh = window.innerHeight;
-
-  // カメラ設定
-  // ピクセル等倍になるように
-  _mainCamera.aspect = sw / sh;
-  _mainCamera.updateProjectionMatrix();
-  _mainCamera.position.z = (sh * 0.5) / Math.tan((_mainCamera.fov * 0.5) * Math.PI / 180);
-
-  _renderer.setSize(sw, sh);
-
-}
-
 
 function mix(x, y, a) {
-  return x * (1 - a) + y * a;
+  return x * (1 - a) + y * a
 }
+
+init()
