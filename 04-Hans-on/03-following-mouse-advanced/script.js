@@ -129,6 +129,9 @@ function showMesh(mesh) {
     scale = random(1, Math.min(_screenWidth, _screenHeight) * 0.05)
   }
   mesh.scale.set(scale, scale, scale)
+  // #### change sample ####
+  // mesh.scale.set(scale * 0.01, scale * random(1, 100), scale * 0.1)
+  // #######################
 
   mesh.rotation.x = radian(random(0, 360))
   mesh.rotation.y = radian(random(0, 360))
