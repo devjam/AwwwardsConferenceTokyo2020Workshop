@@ -62,6 +62,9 @@ function resetMesh(mesh) {
 
   // randomly choose from three color
   mesh.material.color = new THREE.Color(randomArr([0xffffff, 0xdd3c03, 0x6b6a66]))
+  // #### change sample ####
+  // mesh.material.color = new THREE.Color(Math.random(), Math.random(), Math.random())
+  // #######################
 
   if (Math.random() > 0.3) {
     mesh.scale.x = random(1, 3)
@@ -73,6 +76,10 @@ function resetMesh(mesh) {
 
   mesh.position.x = random(_screenWidth * 1, _screenWidth * 2)
   mesh.position.y = 0
+
+  // #### change sample ####
+  // mesh.rotation.z = radian(random(-30, 30))
+  // #######################
 }
 
 function mix(x, y, a) {
