@@ -5,6 +5,9 @@ function _init() {
     canvas: document.getElementsByClassName('main')[0]
   })
   _renderer.setClearColor(0xe1e1e3, 1) // background color
+  // #### change sample ####
+  // _renderer.setClearColor(0x000000, 1)
+  // #######################
   _renderer.setPixelRatio(window.devicePixelRatio || 1)
 
   // make main scene

@@ -14,7 +14,10 @@ function init() {
   _img = new THREE.Mesh(
     new THREE.PlaneBufferGeometry(1, 1),
     new THREE.MeshBasicMaterial({
-      map: new THREE.TextureLoader().load('./tex.jpg'),
+      map: new THREE.TextureLoader().load('./tex.jpg')
+      // #### change sample ####
+      // map: new THREE.TextureLoader().load('./tex2.jpg')
+      // #######################
     }),
   )
   _mainScene.add(_img)
@@ -40,6 +43,26 @@ function init() {
     })
   }
 }
+// #### change sample ####
+// for (let i = 0; i < 3; i++) {
+//   _items.push({
+//     mesh: makeMesh(new THREE.TorusBufferGeometry(0.75, 0.1, 8, 3), THREE.AdditiveBlending),
+//     noise: random(-1, 1),
+//   })
+//   _items.push({
+//     mesh: makeMesh(new THREE.TorusBufferGeometry(0.75, 0.1, 8, 6), THREE.AdditiveBlending),
+//     noise: random(-1, 1),
+//   })
+//   _items.push({
+//     mesh: makeMesh(new THREE.TorusBufferGeometry(0.75, 0.1, 8, 9), THREE.AdditiveBlending),
+//     noise: random(-1, 1),
+//   })
+//   _items.push({
+//     mesh: makeMesh(new THREE.TorusBufferGeometry(0.75, 0.1, 8, 12), THREE.AdditiveBlending),
+//     noise: random(-1, 1),
+//   })
+// }
+// #######################
 
 // update every frame
 function update() {
@@ -101,12 +124,22 @@ function resetMesh(mesh) {
   mesh.position.y = random(-_screenHeight * 4, -_screenHeight * 1)
 
   mesh.material.color = new THREE.Color(random(0, 1), random(0, 1), random(0, 1))
+  // #### change sample ####
+  // color = new THREE.Color(0xff0000)
+  // color.offsetHSL(0, 0, random(0, 0.1))
+  // mesh.material.color = color
+  // #######################
 
   mesh.rotation.x = radian(random(0, 360))
   mesh.rotation.y = radian(random(0, 360))
   mesh.rotation.z = radian(random(0, 360))
 
   const itemSize = Math.min(_screenWidth, _screenHeight) * random(0.1, 0.25)
+  // #### change sample ####
+  // if(Math.random() > 0.8) {
+  //   itemSize *= 3
+  // }
+  // #######################
   mesh.scale.set(itemSize, itemSize, itemSize)
 }
 
