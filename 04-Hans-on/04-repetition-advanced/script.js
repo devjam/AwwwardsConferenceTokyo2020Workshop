@@ -55,6 +55,16 @@ function update() {
     const rad = radian(_cnt + key * _interval)
     mesh.position.x = Math.sin(rad) * radius
     mesh.position.z = Math.cos(rad) * radius
+    // #### change sample ####
+    // mesh.position.x = Math.sin(rad) * radius * 1.5
+    // mesh.position.z = Math.cos(rad) * radius * 1.5
+    // #######################
+
+    // #### change sample ####
+    // mesh.rotation.x = radian(Math.sin(rad) * 90)
+    // mesh.rotation.y = radian(Math.cos(rad) * 90)
+    // mesh.rotation.z = radian(Math.cos(rad) * 90)
+    // #######################
 
     if (_noiseCnt > 0) {
       // random position & size & opacity
