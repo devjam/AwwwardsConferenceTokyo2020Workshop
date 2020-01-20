@@ -1,7 +1,13 @@
 var _renderer, _mainScene, _mainCamera, _container, _material, _mesh;
 
 var _size = 100
-var _ease = 'power1.inOut'// https://greensock.com/docs/v3/Eases
+// https://greensock.com/docs/v3/Eases
+var _ease = 'none'
+// var _ease = 'power1.in'
+// var _ease = 'power1.out'
+// var _ease = 'power1.inOut'
+
+// CustomEase requires a plugin.
 var _duration = 1.0
 
 var _pos = {
