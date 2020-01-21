@@ -1,6 +1,6 @@
 // common variables
 // can use them inside init, update and resize functions
-let _renderer, _mainScene, _mainCamera, _screenWidth, _screenHeight
+let _renderer, _mainScene, _mainCamera, _uniforms, _screenWidth, _screenHeight
 
 // define variables
 

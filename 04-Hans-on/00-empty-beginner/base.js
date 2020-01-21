@@ -1,3 +1,5 @@
+let _pp
+
 // initialization
 function _init() {
   // make renderer
@@ -14,10 +16,34 @@ function _init() {
   // make main camera
   _mainCamera = new THREE.PerspectiveCamera(40, 1, 0.1, 50000)
 
+  // for glsl uniforms
+  _uniforms = {}
+  // _uniforms = {
+  //   time: {
+  //     value: 0,
+  //   },
+  // }
+
   _screenWidth = window.innerWidth
   _screenHeight = window.innerHeight
 
   init()
+
+  // for glsl
+  ;(async () => {
+    const [f1, f2] = await Promise.all([
+      loadglsl('./fs1.frag'),
+      loadglsl('./fs2.frag'),
+    ])
+
+    _pp = new PostProcessing(_renderer, [{
+      fragmentShader: f1,
+      uniforms: _uniforms,
+    }, {
+      fragmentShader: f2,
+      uniforms: _uniforms,
+    }])
+  })()
 
   window.addEventListener('resize', _resize)
   _resize()
@@ -29,7 +55,7 @@ function _update() {
   update()
 
   // rendering
-  _renderer.render(_mainScene, _mainCamera)
+  if(_pp) _pp.render(_mainScene, _mainCamera)
 
   window.requestAnimationFrame(_update)
 }
@@ -47,6 +73,16 @@ function _resize() {
   _renderer.setSize(_screenWidth, _screenHeight)
 
   resize()
+}
+
+function loadglsl(url) {
+  return fetch(url)
+    .then(response => {
+      return response.text()
+    })
+    .then(source => {
+      return source
+    })
 }
 
 _init()

@@ -1,12 +1,7 @@
-// common variables
 let _pp
-let _renderer, _mainScene, _mainCamera, _uniforms, _screenWidth, _screenHeight
-
-// define variables
-
 
 // initialization
-function init() {
+function _init() {
   // make renderer
   _renderer = new THREE.WebGLRenderer({
     canvas: document.getElementsByClassName('main')[0],
@@ -21,13 +16,19 @@ function init() {
   // make main camera
   _mainCamera = new THREE.PerspectiveCamera(40, 1, 0.1, 50000)
 
-  // for glsl
+  // for glsl uniforms
   _uniforms = {
     time: {
       value: 0,
     },
   }
 
+  _screenWidth = window.innerWidth
+  _screenHeight = window.innerHeight
+
+  init()
+
+  // for glsl
   ;(async () => {
     const [f1, f2] = await Promise.all([
       loadglsl('./fs1.frag'),
@@ -43,27 +44,23 @@ function init() {
     }])
   })()
 
-  // prepare some 3D objects
-
-
-  window.addEventListener('resize', resize)
-  resize()
-  update()
+  window.addEventListener('resize', _resize)
+  _resize()
+  _update()
 }
 
 // update every frame
-function update() {
-  // update some thing for animations
-
+function _update() {
+  update()
 
   // rendering
   if(_pp) _pp.render(_mainScene, _mainCamera)
 
-  window.requestAnimationFrame(update)
+  window.requestAnimationFrame(_update)
 }
 
 // update something when window resized
-function resize() {
+function _resize() {
   _screenWidth = window.innerWidth
   _screenHeight = window.innerHeight
 
@@ -74,8 +71,7 @@ function resize() {
 
   _renderer.setSize(_screenWidth, _screenHeight)
 
-  // update something
-
+  resize()
 }
 
 function loadglsl(url) {
@@ -88,7 +84,4 @@ function loadglsl(url) {
     })
 }
 
-// some util functions
-
-
-init()
+_init()
