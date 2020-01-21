@@ -32,7 +32,6 @@ class Random {
     this.w = seed
   }
 
-  // XorShift
   next() {
     let t
 
@@ -43,14 +42,12 @@ class Random {
     return (this.w = this.w ^ (this.w >>> 19) ^ (t ^ (t >>> 8)))
   }
 
-  // min以上max以下の乱数を生成する
   nextInt(min, max) {
     const r = Math.abs(this.next())
     return min + (r % (max + 1 - min))
   }
 }
 
-// 初期設定
 init()
 function init() {
   _renderer = new THREE.WebGLRenderer({
