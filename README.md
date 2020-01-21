@@ -7,7 +7,10 @@ Folder 04-Hans-on is for hans-on section. you can change these codes or make som
 
 
 ## Editor
+https://we.tl/t-m7R1ZPCHq0  
+
 Attached editor has features such as preview and auto-reload.  
+
 
 webgl editron is made by doxas.  
 https://github.com/doxas/webgl_editron
