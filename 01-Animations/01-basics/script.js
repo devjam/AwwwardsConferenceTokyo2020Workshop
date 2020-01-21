@@ -73,8 +73,8 @@ function init() {
   })
 
   const geo = new THREE.BoxBufferGeometry(_size, _size, 0)
-  for (var i = 0; i < _params.frame; i++) {
-    var mesh = new THREE.Mesh(geo, _material)
+  for (let i = 0; i < _params.frame; i++) {
+    const mesh = new THREE.Mesh(geo, _material)
     _container.add(mesh)
     _mesh.push(mesh)
   }
@@ -151,8 +151,8 @@ function update() {
 }
 
 function resize() {
-  var sw = window.innerWidth
-  var sh = window.innerHeight
+  const sw = window.innerWidth
+  const sh = window.innerHeight
 
   _mainCamera.aspect = sw / sh
   _mainCamera.updateProjectionMatrix()
